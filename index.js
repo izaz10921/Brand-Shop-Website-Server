@@ -30,6 +30,63 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const productCollection = client.db('productDB').collection('product');
+
+    app.get("/product", async (req, res) => {
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/:brand", async (req, res) => {
+      const cursor = productCollection.find({ brand: `${req.params.brand}` });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+  
+
+    // app.get("/details/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await productCollection.findOne(query);
+    //   res.send(result);
+    // });
+
+
+   
+  
+    app.post("/addProduct", async (req, res) => {
+      const newProduct = req.body;
+      console.log(newProduct);
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    });
+
+    // app.put("/product/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const filter = { _id: new ObjectId(id) };
+     
+    //   const updateProduct = req.body;
+    //   const product = {
+    //     $set: {
+    //       name: updateProduct.name,
+    //       brand: updateProduct.brand,
+    //       type: updateProduct.type,
+    //       price: updateProduct.price,
+    //       image: updateProduct.image,
+    //       description: updateProduct.description,
+    //       rating: updateProduct.rating,
+    //     },
+    //   };
+    //   const result = await productCollection.updateOne(
+    //     filter,
+    //     product
+    //   );
+
+    //   res.send(result);
+    // });
+   
+
 
 
 
